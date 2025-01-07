@@ -26,9 +26,9 @@ namespace Giftly
             conn.ConnectionString = "server = localhost; user id = root; database = giftly";
         }
 
-        private void add_recipient_btn_Click(object sender, EventArgs e)
+        private void add_recipient_btn_Click_1(object sender, EventArgs e)
         {
-            if(firstname.Text == "" || lastname.Text == "" || relationship.Text == "" || address.Text == "" || contact_number.Text == "")
+            if (firstname.Text == "" || lastname.Text == "" || relationship.Text == "" || address.Text == "" || contact_number.Text == "")
             {
                 MessageBox.Show("Please fill in all fields!");
             }
@@ -61,7 +61,5 @@ namespace Giftly
                 }
             }
         }
-
-        
     }
 }

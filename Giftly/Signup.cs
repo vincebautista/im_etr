@@ -11,24 +11,30 @@ using MySql.Data.MySqlClient;
 
 namespace Giftly
 {
-    public partial class Signup : Form
+    public partial class Sign_up : Form
     {
         MySqlConnection conn = new MySqlConnection();
         MySqlCommand cmd = new MySqlCommand();
-
-        public Signup()
+        public Sign_up()
         {
             InitializeComponent();
         }
+        private void LoginBtn_Click(object sender, EventArgs e)
+        {
+            
+            Form1 form = new Form1();
+            this.Hide();
+            form.Show();
+        }
 
-        private void Signup_Load(object sender, EventArgs e)
+        private void Sign_up_Load(object sender, EventArgs e)
         {
             conn.ConnectionString = "server = localhost; user id = root; database = giftly";
         }
 
-        private void signup_btn_Click(object sender, EventArgs e)
+        private void CreateAccountBtn_Click(object sender, EventArgs e)
         {
-            if(firstname.Text == "" || lastname.Text == "" || email.Text == "" || password.Text == "")
+            if (Firstname.Text == "" || Lastname.Text == "" || Email.Text == "" || Password.Text == "")
             {
                 MessageBox.Show("Please fill up all input fields!");
             }
@@ -40,7 +46,7 @@ namespace Giftly
 
                     String sql = "SELECT * FROM user WHERE email = @email";
                     cmd = new MySqlCommand(sql, conn);
-                    cmd.Parameters.AddWithValue("@email", email.Text);
+                    cmd.Parameters.AddWithValue("@email", Email.Text);
 
                     bool emailExists = false;
 
@@ -56,21 +62,28 @@ namespace Giftly
                     {
                         MessageBox.Show("Email is already taken!");
                     }
+                    else if (!Male.Checked && !Female.Checked)
+                    {
+                        MessageBox.Show("Please select a gender!");
+                    }
                     else
                     {
-                        String query = "INSERT INTO user (firstname, lastname, email, password, date_created) VALUES (@firstname, @lastname, @email, @password, NOW())";
+                        string gender = Male.Checked ? "Male" : "Female";
+                        String query = "INSERT INTO user (firstname, lastname, gender, email, password, date_created) VALUES (@firstname, @lastname, @gender, @email, @password, NOW())";
                         cmd = new MySqlCommand(query, conn);
-                        cmd.Parameters.AddWithValue("@firstname", firstname.Text);
-                        cmd.Parameters.AddWithValue("@lastname", lastname.Text);
-                        cmd.Parameters.AddWithValue("@email", email.Text);
-                        cmd.Parameters.AddWithValue("@password", password.Text);
+                        cmd.Parameters.AddWithValue("@firstname", Firstname.Text);
+                        cmd.Parameters.AddWithValue("@lastname", Lastname.Text);
+                        cmd.Parameters.AddWithValue("@email", Email.Text);
+                        cmd.Parameters.AddWithValue("@gender", gender);
+                        cmd.Parameters.AddWithValue("@password", Password.Text);
                         cmd.ExecuteNonQuery();
 
-                        firstname.Clear();
-                        lastname.Clear();
-                        email.Clear();
-                        password.Clear();
-
+                        Firstname.Clear();
+                        Lastname.Clear();
+                        Email.Clear();
+                        Password.Clear();
+                        Male.Checked = false;
+                        Female.Checked = false;
                         MessageBox.Show("Created Account Successfully!");
                     }
                 }
@@ -85,10 +98,20 @@ namespace Giftly
             }
         }
 
-        private void back_Click(object sender, EventArgs e)
+        private void Male_CheckedChanged(object sender, EventArgs e)
         {
-            this.Hide();
-            new Form1().Show();
+            if (Male.Checked)
+            
+                Female.Checked = false;
+            }
+
+        private void Female_CheckedChanged(object sender, EventArgs e)
+        {
+            if (Female.Checked)
+            {
+                Male.Checked = false;
+            }
         }
     }
 }
+

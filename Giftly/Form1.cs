@@ -27,16 +27,60 @@ namespace Giftly
             conn.ConnectionString = "server = localhost; user id = root; database = giftly";
         }
 
-        private void button1_Click(object sender, EventArgs e)
-        {
-            this.Hide();
-            new Login().Show();
-        }
-
         private void SignUpBtn_Click(object sender, EventArgs e)
         {
             this.Hide();
             new Sign_up().Show();
+        }
+
+        private void LoginBtn_Click(object sender, EventArgs e)
+        {
+            if (Email.Text == "" || Password.Text == "")
+            {
+                MessageBox.Show("Please fill up all input fields!");
+            }
+            else
+            {
+                try
+                {
+                    conn.Open();
+
+                    String sql = "SELECT * FROM user WHERE email = @email AND password = @password";
+                    cmd = new MySqlCommand(sql, conn);
+                    cmd.Parameters.AddWithValue("@email", Email.Text);
+                    cmd.Parameters.AddWithValue("@password", Password.Text);
+
+                    using (MySqlDataReader dr = cmd.ExecuteReader())
+                    {
+                        if (dr.HasRows)
+                        {
+                            dr.Read();
+
+                            Session.UserId = int.Parse(dr["user_id"].ToString());
+                            Session.UserEmail = dr["email"].ToString();
+                            Session.UserFirstName = dr["firstname"].ToString();
+                            Session.UserLastName = dr["lastname"].ToString();
+
+                            dr.Close();
+
+                            this.Hide();
+                            new Home().Show();
+                        }
+                        else
+                        {
+                            MessageBox.Show("Invalid email or password!");
+                        }
+                    }
+                }
+                catch (Exception err)
+                {
+                    MessageBox.Show(err.Message);
+                }
+                finally
+                {
+                    conn.Close();
+                }
+            }
         }
     }
 }

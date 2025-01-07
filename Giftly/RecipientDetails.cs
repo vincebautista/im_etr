@@ -424,9 +424,9 @@ namespace Giftly
             }
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void notification_Click(object sender, EventArgs e)
         {
-            SendTestNotifications();
+            new Notification().Show();
         }
     }
 }

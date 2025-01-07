@@ -102,5 +102,10 @@ namespace Giftly
         {
             displayRecipients(search.Text);
         }
+
+        private void order_history_Click(object sender, EventArgs e)
+        {
+            new OrderHistory().Show();
+        }
     }
 }
